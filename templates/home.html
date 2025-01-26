@@ -1,19 +1,80 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">工事管理システム</h1>
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --text-color: #34495e;
+        --card-shadow: rgba(44, 62, 80, 0.1);
+        --accent-color: #3498db;
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        background: #ffffff;
+        box-shadow: 0 4px 6px var(--card-shadow);
+        position: relative;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--card-shadow);
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .card-text {
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .btn {
+        border-radius: 25px;
+        padding: 8px 20px;
+        font-weight: 500;
+        transition: transform 0.3s ease;
+        color: #ffffff;
+        border: none;
+        background-color: var(--accent-color);
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        color: #ffffff;
+        background-color: var(--accent-color);
+    }
+
+    .card i {
+        color: var(--accent-color);
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="display-4 mb-5 text-center fw-bold" style="color: var(--primary-color)">工事管理システム</h1>
 
     <div class="row g-4">
         <!-- プロジェクト管理 -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h5 class="card-title">
-                        <i class="bi bi-building text-primary"></i> プロジェクト管理
+                        <i class="bi bi-building"></i> プロジェクト管理
                     </h5>
                     <p class="card-text">工事案件の登録、進捗管理、スケジュール管理など</p>
-                    <a href="{% url 'projects:project_list' %}" class="btn btn-primary">
+                    <a href="{% url 'projects:project_list' %}" class="btn w-100">
                         <i class="bi bi-arrow-right"></i> プロジェクト一覧へ
                     </a>
                 </div>
@@ -23,12 +84,12 @@
         <!-- スケジュール管理 -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h5 class="card-title">
-                        <i class="bi bi-calendar-event text-warning"></i> スケジュール管理
+                        <i class="bi bi-calendar-event"></i> スケジュール管理
                     </h5>
                     <p class="card-text">工程表の作成、進捗状況の管理など</p>
-                    <a href="{% url 'schedules:schedule_list' %}" class="btn btn-warning">
+                    <a href="{% url 'schedules:schedule_list' %}" class="btn w-100">
                         <i class="bi bi-arrow-right"></i> スケジュール一覧へ
                     </a>
                 </div>
@@ -38,12 +99,12 @@
         <!-- コスト管理 -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h5 class="card-title">
-                        <i class="bi bi-cash-coin text-danger"></i> コスト管理
+                        <i class="bi bi-cash-coin"></i> コスト管理
                     </h5>
                     <p class="card-text">予算管理、経費の記録、支払い状況の管理など</p>
-                    <a href="{% url 'costs:cost_list' %}" class="btn btn-danger">
+                    <a href="{% url 'costs:cost_list' %}" class="btn w-100">
                         <i class="bi bi-arrow-right"></i> コスト一覧へ
                     </a>
                 </div>
@@ -53,12 +114,12 @@
         <!-- 作業員管理 -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h5 class="card-title">
-                        <i class="bi bi-people text-success"></i> 作業員管理
+                        <i class="bi bi-people"></i> 作業員管理
                     </h5>
                     <p class="card-text">作業員情報、資格管理、作業記録の管理など</p>
-                    <a href="{% url 'workers:worker_list' %}" class="btn btn-success">
+                    <a href="{% url 'workers:worker_list' %}" class="btn w-100">
                         <i class="bi bi-arrow-right"></i> 作業員一覧へ
                     </a>
                 </div>
@@ -68,12 +129,12 @@
         <!-- 資材管理 -->
         <div class="col-md-6 col-lg-4">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-body p-4">
                     <h5 class="card-title">
-                        <i class="bi bi-box text-info"></i> 資材管理
+                        <i class="bi bi-box"></i> 資材管理
                     </h5>
                     <p class="card-text">資材の在庫管理、発注・入荷記録の管理など</p>
-                    <a href="{% url 'materials:material_list' %}" class="btn btn-info text-white">
+                    <a href="{% url 'materials:material_list' %}" class="btn w-100">
                         <i class="bi bi-arrow-right"></i> 資材一覧へ
                     </a>
                 </div>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="card-title mb-4">ログアウトしました</h2>
+                    <p class="card-text mb-4">ご利用ありがとうございました。</p>
+                    <a href="{% url 'login' %}" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> 再度ログインする
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
