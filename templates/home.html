@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">工事管理システム</h1>
+
+    <div class="row g-4">
+        <!-- プロジェクト管理 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-building text-primary"></i> プロジェクト管理
+                    </h5>
+                    <p class="card-text">工事案件の登録、進捗管理、スケジュール管理など</p>
+                    <a href="{% url 'projects:project_list' %}" class="btn btn-primary">
+                        <i class="bi bi-arrow-right"></i> プロジェクト一覧へ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- スケジュール管理 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-calendar-event text-warning"></i> スケジュール管理
+                    </h5>
+                    <p class="card-text">工程表の作成、進捗状況の管理など</p>
+                    <a href="{% url 'schedules:schedule_list' %}" class="btn btn-warning">
+                        <i class="bi bi-arrow-right"></i> スケジュール一覧へ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- コスト管理 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-cash-coin text-danger"></i> コスト管理
+                    </h5>
+                    <p class="card-text">予算管理、経費の記録、支払い状況の管理など</p>
+                    <a href="{% url 'costs:cost_list' %}" class="btn btn-danger">
+                        <i class="bi bi-arrow-right"></i> コスト一覧へ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作業員管理 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-people text-success"></i> 作業員管理
+                    </h5>
+                    <p class="card-text">作業員情報、資格管理、作業記録の管理など</p>
+                    <a href="{% url 'workers:worker_list' %}" class="btn btn-success">
+                        <i class="bi bi-arrow-right"></i> 作業員一覧へ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 資材管理 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-box text-info"></i> 資材管理
+                    </h5>
+                    <p class="card-text">資材の在庫管理、発注・入荷記録の管理など</p>
+                    <a href="{% url 'materials:material_list' %}" class="btn btn-info text-white">
+                        <i class="bi bi-arrow-right"></i> 資材一覧へ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

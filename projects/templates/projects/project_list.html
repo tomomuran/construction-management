@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>プロジェクト一覧</h2>
+        <a href="{% url 'projects:project_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新規プロジェクト
+        </a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+        {% for project in projects %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ project.location }}</h6>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> {{ project.start_date }} 〜 {{ project.end_date }}
+                        </small>
+                    </p>
+                    <p class="card-text">{{ project.description|truncatewords:30 }}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">担当: {{ project.manager }}</small>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-outline-primary">
+                                <i class="bi bi-eye"></i> 詳細
+                            </a>
+                            <a href="{% url 'projects:project_update' project.pk %}" class="btn btn-outline-success">
+                                <i class="bi bi-pencil"></i> 編集
+                            </a>
+                            <a href="{% url 'projects:project_delete' project.pk %}" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> 削除
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                プロジェクトがまだ登録されていません。
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

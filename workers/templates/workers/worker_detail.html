@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>作業員詳細</h2>
+    <div class="btn-group">
+      <a href="{% url 'workers:work_record_create' worker.pk %}" class="btn btn-success">
+        <i class="bi bi-calendar-plus"></i> 作業記録登録
+      </a>
+      <a href="{% url 'workers:qualification_create' worker.pk %}" class="btn btn-info text-white">
+        <i class="bi bi-patch-plus"></i> 資格登録
+      </a>
+      <a href="{% url 'workers:worker_update' worker.pk %}" class="btn btn-primary">
+        <i class="bi bi-pencil"></i> 編集
+      </a>
+      <a href="{% url 'workers:worker_delete' worker.pk %}" class="btn btn-danger">
+        <i class="bi bi-trash"></i> 削除
+      </a>
+    </div>
+  </div>
+
+  <!-- 基本情報 -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="card-title mb-0">基本情報</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <dl class="row">
+            <dt class="col-sm-4">社員番号</dt>
+            <dd class="col-sm-8">{{ worker.employee_number }}</dd>
+            
+            <dt class="col-sm-4">氏名</dt>
+            <dd class="col-sm-8">{{ worker.name }}</dd>
+            
+            <dt class="col-sm-4">電話番号</dt>
+            <dd class="col-sm-8">{{ worker.phone_number }}</dd>
+            
+            <dt class="col-sm-4">メールアドレス</dt>
+            <dd class="col-sm-8">{{ worker.email|default:"-" }}</dd>
+          </dl>
+        </div>
+        <div class="col-md-6">
+          <dl class="row">
+            <dt class="col-sm-4">雇用形態</dt>
+            <dd class="col-sm-8">{{ worker.get_employment_status_display }}</dd>
+            
+            <dt class="col-sm-4">入社日</dt>
+            <dd class="col-sm-8">{{ worker.join_date }}</dd>
+            
+            <dt class="col-sm-4">退社日</dt>
+            <dd class="col-sm-8">{{ worker.leave_date|default:"-" }}</dd>
+            
+            <dt class="col-sm-4">状態</dt>
+            <dd class="col-sm-8">
+              {% if worker.is_active %}
+                <span class="badge bg-success">在籍中</span>
+              {% else %}
+                <span class="badge bg-secondary">退職済み</span>
+              {% endif %}
+            </dd>
+          </dl>
+        </div>
+      </div>
+      
+      <dt class="col-12">住所</dt>
+      <dd class="col-12">{{ worker.address }}</dd>
+      
+      {% if worker.notes %}
+        <dt class="col-12">備考</dt>
+        <dd class="col-12">{{ worker.notes|linebreaks }}</dd>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 保有資格 -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">保有資格</h5>
+      <a href="{% url 'workers:qualification_create' worker.pk %}" class="btn btn-sm btn-info text-white">
+        <i class="bi bi-patch-plus"></i> 資格登録
+      </a>
+    </div>
+    <div class="card-body">
+      {% if qualifications %}
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>資格名</th>
+                <th>資格番号</th>
+                <th>取得日</th>
+                <th>有効期限</th>
+                <th>状態</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for qualification in qualifications %}
+                <tr>
+                  <td>{{ qualification.name }}</td>
+                  <td>{{ qualification.qualification_number }}</td>
+                  <td>{{ qualification.issue_date }}</td>
+                  <td>{{ qualification.expiry_date|default:"-" }}</td>
+                  <td>
+                    {% if qualification.is_valid %}
+                      <span class="badge bg-success">有効</span>
+                    {% else %}
+                      <span class="badge bg-danger">期限切れ</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{% url 'workers:qualification_update' qualification.pk %}" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-pencil"></i> 編集
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          資格情報が登録されていません。
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 作業記録 -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="card-title mb-0">最近の作業記録</h5>
+      <div>
+        <span class="me-3">今月の作業時間: {{ monthly_hours }}時間</span>
+        <a href="{% url 'workers:work_record_create' worker.pk %}" class="btn btn-sm btn-success">
+          <i class="bi bi-calendar-plus"></i> 作業記録登録
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      {% if recent_work_records %}
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>作業日</th>
+                <th>プロジェクト</th>
+                <th>開始時間</th>
+                <th>終了時間</th>
+                <th>休憩時間</th>
+                <th>作業時間</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in recent_work_records %}
+                <tr>
+                  <td>{{ record.work_date }}</td>
+                  <td>{{ record.project.name }}</td>
+                  <td>{{ record.start_time }}</td>
+                  <td>{{ record.end_time }}</td>
+                  <td>{{ record.break_time }}分</td>
+                  <td>{{ record.working_hours }}時間</td>
+                  <td>
+                    <a href="{% url 'workers:work_record_update' record.pk %}" class="btn btn-sm btn-outline-primary">
+                      <i class="bi bi-pencil"></i> 編集
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          作業記録が登録されていません。
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a href="{% url 'workers:worker_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> 作業員一覧に戻る
+    </a>
+  </div>
+</div>
+{% endblock %} 

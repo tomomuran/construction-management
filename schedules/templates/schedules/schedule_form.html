@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title mb-0">
+                        {% if form.instance.pk %}
+                            工程の編集
+                        {% else %}
+                            新規工程の作成
+                        {% endif %}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                </label>
+                                {% if field.field.widget.input_type == 'date' %}
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-calendar"></i>
+                                        </span>
+                                        <input type="date" 
+                                               name="{{ field.name }}"
+                                               id="{{ field.id_for_label }}"
+                                               class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                               value="{{ field.value|date:'Y-m-d'|default:'' }}"
+                                               autocomplete="off"
+                                        >
+                                    </div>
+                                {% else %}
+                                    {{ field.as_widget }}
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ field.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="form-text">
+                                        {{ field.help_text }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'schedules:project_schedules' project.id %}" class="btn btn-secondary me-md-2">
+                                キャンセル
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                {% if form.instance.pk %}
+                                    更新
+                                {% else %}
+                                    作成
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // フォームフィールドにBootstrapのクラスを追加
+        document.querySelectorAll('input:not([type="hidden"]), select, textarea').forEach(function(element) {
+            if (!element.classList.contains('form-control')) {
+                element.classList.add('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %} 

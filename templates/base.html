@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建設業務管理システム</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    {% block extra_css %}{% endblock %}
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        /* フォーム全体のスタイル */
+        .form-control {
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        /* 数値入力フィールドのスタイル */
+        input[type="number"] {
+            text-align: right;
+            padding-right: 10px;
+        }
+        /* カレンダー入力フィールドのスタイル */
+        .input-group-text {
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-right: none;
+        }
+        .input-group .form-control[type="date"] {
+            border-left: none;
+        }
+        .input-group-text .bi-calendar {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        .input-group:hover .input-group-text,
+        .input-group:hover .form-control[type="date"] {
+            border-color: #86b7fe;
+        }
+        .input-group:hover .bi-calendar {
+            color: #0d6efd;
+        }
+        .input-group:hover .form-control:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        /* Flatpickrカレンダーのカスタマイズ */
+        .flatpickr-calendar {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            width: 307px;
+        }
+        .flatpickr-day {
+            color: #212529;
+            border-radius: 4px;
+        }
+        .flatpickr-day.selected {
+            background: #0d6efd;
+            color: #fff;
+        }
+        .flatpickr-day:hover {
+            background: #e9ecef;
+        }
+        .flatpickr-months {
+            padding: 0.5rem 0;
+        }
+        .flatpickr-current-month {
+            color: #212529;
+        }
+        .flatpickr-weekday {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .flatpickr-months .flatpickr-month {
+            background: #f8f9fa;
+            color: #333;
+            border-radius: 4px 4px 0 0;
+            padding: 0.5rem 0;
+        }
+        .numInputWrapper:hover {
+            background: #e9ecef;
+        }
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            background-color: #ffffff;
+            width: 240px;
+            transition: transform 0.3s ease-in-out;
+            border-right: 1px solid #e9ecef;
+        }
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            margin-top: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .nav-link {
+            color: #2c3e50;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #f8f9fa;
+            color: #1abc9c;
+        }
+        .nav-link.active {
+            background-color: #1abc9c;
+            color: white;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .navbar-dark.bg-primary {
+            background-color: #2c3e50 !important;
+        }
+        .navbar-dark .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+        .navbar-dark .nav-link:hover {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .navbar-dark .navbar-brand {
+            color: #ffffff !important;
+        }
+        .navbar-dark .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+                margin-top: 15px;
+            }
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">建設業務管理</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if user.is_authenticated %}
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'projects:project_list' %}">
+                                <i class="bi bi-kanban"></i> プロジェクト
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'workers:worker_list' %}">
+                                <i class="bi bi-people"></i> 作業員
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'materials:material_list' %}">
+                                <i class="bi bi-box"></i> 資材
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'costs:cost_list' %}">
+                                <i class="bi bi-cash"></i> 経費
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'schedules:schedule_list' %}">
+                                <i class="bi bi-calendar"></i> スケジュール
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'password_change' %}">
+                                    <i class="bi bi-key"></i> パスワード変更
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i> ログアウト
+                                </a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> ログイン
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- メッセージ -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- メインコンテンツ -->
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // サイドバーの設定
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    document.getElementById('sidebar').classList.toggle('show');
+                });
+            }
+
+            // 画面サイズが変更された時にサイドバーの表示を調整
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+
+                // モバイル時にメニュー項目クリックでサイドバーを閉じる
+                if (window.innerWidth <= 768) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.addEventListener('click', function() {
+                            sidebar.classList.remove('show');
+                        });
+                    });
+                }
+            }
+
+            // シンプルなFlatpickrの設定
+            flatpickr.localize(flatpickr.l10ns.ja);
+            
+            const dateInputs = document.querySelectorAll('input.datepicker');
+            if (dateInputs.length > 0) {
+                dateInputs.forEach(input => {
+                    flatpickr(input, {
+                        dateFormat: "Y-m-d",
+                        allowInput: true,
+                        disableMobile: true,
+                        monthSelectorType: "dropdown",
+                        defaultDate: input.value || null,
+                        onChange: function(selectedDates, dateStr, instance) {
+                            // 値が変更されたときにフォームフィールドを更新
+                            instance.input.value = dateStr;
+                            // changeイベントを発火して、フォームのバリデーションを実行
+                            instance.input.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                });
+            }
+
+            console.log('Flatpickr initialized'); // デバッグ用
+            console.log('Found datepicker elements:', document.querySelectorAll('.datepicker').length); // デバッグ用
+
+            // 数値入力フィールドの設定
+            document.querySelectorAll('input[type="number"]').forEach(function(input) {
+                input.addEventListener('focus', function() {
+                    this.select();
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

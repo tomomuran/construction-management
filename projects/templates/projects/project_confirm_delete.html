@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">プロジェクトの削除</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        以下のプロジェクトを削除してもよろしいですか？
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">プロジェクト名</dt>
+                        <dd class="col-sm-9">{{ project.name }}</dd>
+
+                        <dt class="col-sm-3">開始日</dt>
+                        <dd class="col-sm-9">{{ project.start_date }}</dd>
+
+                        <dt class="col-sm-3">終了日</dt>
+                        <dd class="col-sm-9">{{ project.end_date }}</dd>
+
+                        <dt class="col-sm-3">ステータス</dt>
+                        <dd class="col-sm-9">{{ project.get_status_display }}</dd>
+
+                        <dt class="col-sm-3">予算</dt>
+                        <dd class="col-sm-9">{{ project.budget|default:"-" }}円</dd>
+
+                        {% if project.description %}
+                            <dt class="col-sm-3">説明</dt>
+                            <dd class="col-sm-9">{{ project.description|linebreaks }}</dd>
+                        {% endif %}
+                    </dl>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <a href="{% url 'projects:project_detail' project.pk %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> キャンセル
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> 削除
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

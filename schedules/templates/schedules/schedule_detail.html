@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>工程詳細</h2>
+        <div>
+            <a href="{% url 'schedules:schedule_update' schedule.id %}" class="btn btn-primary">
+                <i class="bi bi-pencil"></i> 編集
+            </a>
+            <a href="{% url 'schedules:schedule_delete' schedule.id %}" class="btn btn-danger">
+                <i class="bi bi-trash"></i> 削除
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>プロジェクト:</strong>
+                </div>
+                <div class="col-md-9">
+                    <a href="{% url 'projects:project_detail' schedule.project.id %}">
+                        {{ schedule.project.name }}
+                    </a>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>作業項目:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.task_name }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>開始予定日:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.planned_start_date }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>終了予定日:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.planned_end_date }}
+                </div>
+            </div>
+
+            {% if schedule.actual_start_date %}
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>実際の開始日:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.actual_start_date }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if schedule.actual_end_date %}
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>実際の終了日:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.actual_end_date }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>状況:</strong>
+                </div>
+                <div class="col-md-9">
+                    <span class="badge {% if schedule.status == 'completed' %}bg-success
+                               {% elif schedule.status == 'in_progress' %}bg-primary
+                               {% elif schedule.status == 'delayed' %}bg-danger
+                               {% else %}bg-secondary{% endif %}">
+                        {{ schedule.get_status_display }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>進捗率:</strong>
+                </div>
+                <div class="col-md-9">
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar {% if schedule.progress >= 100 %}bg-success
+                                    {% elif schedule.progress >= 50 %}bg-primary
+                                    {% else %}bg-warning{% endif %}"
+                             role="progressbar"
+                             style="width: {{ schedule.progress }}%"
+                             aria-valuenow="{{ schedule.progress }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{ schedule.progress }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>担当者:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.assigned_to|default:"未割り当て" }}
+                </div>
+            </div>
+
+            {% if schedule.notes %}
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>備考:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.notes|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <strong>作成日時:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.created_at }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>更新日時:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ schedule.updated_at }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a href="{% url 'schedules:project_schedules' schedule.project.id %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> 工程一覧に戻る
+        </a>
+    </div>
+</div>
+{% endblock %} 
