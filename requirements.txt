@@ -4,7 +4,7 @@ django-bootstrap5==24.3
 django-extensions==3.2.3
 django-pygments-renderer==0.0.1
 django-widget-tweaks==1.5.0
-django-humanize==3.0.0
+django-humanize==0.1.2
 django-environ==0.11.2
 djangorestframework==3.15.2
 factory_boy==3.3.1
